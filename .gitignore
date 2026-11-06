@@ -1,0 +1,45 @@
+# Node modules
+node_modules/
+
+# Log files
+*.log
+
+# Environment files
+.env
+
+# Temporary build files
+/dist
+/build
+
+# Dependency directories
+bower_components/
+
+# IDE or editor specific files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Coverage directory for testing
+/coverage
+
+# NPM package-lock files (if you don't want to commit them)
+package-lock.json
+
+# Test output
+*.tgz
+*.bak
+
+# Yarn lock file if using Yarn
+yarn.lock
+
+# Optional: if you are using Docker
+docker-compose.override.yml
+
+# Optional: if you have a build folder
+/public/build
+
+# Optional: if you have a .npmrc
+.npmrc

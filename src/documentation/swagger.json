@@ -1,0 +1,413 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Express API with TypeScript",
+    "version": "1.0.0",
+    "description": "A simple API documentation for Express and TypeScript"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "409": {
+            "description": "Email is already registered"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Authenticate a user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful"
+          },
+          "401": {
+            "description": "Invalid email or password"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/profile": {
+      "get": {
+        "summary": "Retrieve the authenticated user's profile",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile retrieved successfully"
+          },
+          "401": {
+            "description": "Missing or invalid token"
+          }
+        }
+      }
+    },
+    "/api/v1/blockchain/store": {
+      "post": {
+        "summary": "stores data (Integer) to the blockchain",
+        "description": "Stores the provided integer data to the blockchain smart contract.",
+        "tags": [
+          "Blockchain"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "number",
+                    "format": "number",
+                    "example": 12345
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A single transaction receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data stored to blockchain successfully"
+                    },
+                    "transactionReceipt": {
+                      "type": "string",
+                      "description": "The transaction receipt object",
+                      "example": "0xabc123d...def456"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data provided or wrong data format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid data provided or wrong data format"
+                    },
+                    "transactionReceipt": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to store data to blockchain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Failed to store data to blockchain"
+                    },
+                    "transactionReceipt": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blockchain/retrieve": {
+      "get": {
+        "summary": "retrieves data (Integer) from the blockchain",
+        "description": "retrieves the integer data from the blockchain smart contract.",
+        "tags": [
+          "Blockchain"
+        ],
+        "responses": {
+          "200": {
+            "description": "data (Integer) retrieved from blockchain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Data retrieved from blockchain successfully"
+                    },
+                    "data": {
+                      "type": "number",
+                      "nullable": true,
+                      "description": "The integer data retrieved from the blockchain",
+                      "example": 12345
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to retrieve data from blockchain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Failed to retrieve data from blockchain"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blockchain/tx": {
+      "post": {
+        "summary": "Get transaction status from the blockchain",
+        "description": "Retrieves the status and receipt of a blockchain transaction using its hash.",
+        "tags": [
+          "Blockchain"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "hash"
+                ],
+                "properties": {
+                  "hash": {
+                    "type": "string",
+                    "format": "hex",
+                    "description": "The transaction hash to look up",
+                    "example": 1.0275648752824256e+76
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "confirmed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction confirmed"
+                    },
+                    "receipt": {
+                      "type": "object",
+                      "description": "Raw blockchain transaction receipt",
+                      "properties": {
+                        "transactionHash": {
+                          "type": "string"
+                        },
+                        "transactionIndex": {
+                          "type": "string"
+                        },
+                        "blockHash": {
+                          "type": "string"
+                        },
+                        "blockNumber": {
+                          "type": "string"
+                        },
+                        "from": {
+                          "type": "string"
+                        },
+                        "to": {
+                          "type": "string"
+                        },
+                        "gasUsed": {
+                          "type": "string"
+                        },
+                        "cumulativeGasUsed": {
+                          "type": "string"
+                        },
+                        "logs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "logsBloom": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid transaction hash",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction hash is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to retrieve the transaction status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Failed to retrieve the transaction status"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints for user registration and authentication"
+    },
+    {
+      "name": "Blockchain",
+      "description": "API to manage blockchain operations"
+    }
+  ]
+}
